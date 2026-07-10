@@ -11,6 +11,7 @@ import {
   getDatabase,
   ref,
   onValue,
+  get,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -51,4 +52,27 @@ export async function escucharDatosActuales(alRecibirDatos, alProducirseError) {
     },
     alProducirseError,
   );
+}
+
+/**
+ * Obtiene todos los registros históricos de una fecha.
+ *
+ * La fecha debe tener formato YYYY-MM-DD.
+ */
+export async function obtenerHistoricoFecha(fecha) {
+  await signInAnonymously(autenticacion);
+
+  const [ano, mes, dia] = fecha.split("-");
+
+  const rutaHistorico = `aulas/AULA-001/historico/${ano}/${mes}/${dia}`;
+
+  const referenciaHistorico = ref(baseDatos, rutaHistorico);
+
+  const snapshot = await get(referenciaHistorico);
+
+  if (!snapshot.exists()) {
+    return [];
+  }
+
+  return Object.values(snapshot.val());
 }

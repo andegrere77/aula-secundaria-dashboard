@@ -237,3 +237,34 @@ body {
 .estado-alarma .valor-estado {
   color: var(--color-rojo);
 }
+
+.tarjeta-grafica {
+  padding: 1.5rem;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.titulo-grafica {
+  font-size: 1.35rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.texto-fecha-grafica,
+.mensaje-grafica {
+  color: var(--color-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.contenedor-grafica {
+  position: relative;
+  height: 320px;
+}
+
+@media (max-width: 575.98px) {
+  .contenedor-grafica {
+    height: 260px;
+  }
+}
