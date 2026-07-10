@@ -36,9 +36,12 @@
           </div>
 
           <div>
-            <span class="badge estado-conexion estado-conexion-online">
+            <span
+              id="estado-conexion"
+              class="badge estado-conexion estado-conexion-offline"
+            >
               <span class="punto-estado"></span>
-              En línea
+              <span id="texto-conexion">Conectando...</span>
             </span>
           </div>
         </div>
@@ -116,16 +119,19 @@
         </div>
       </section>
 
-      <section class="tarjeta-estado estado-silencio text-center">
+      <section
+        id="tarjeta-estado"
+        class="tarjeta-estado estado-silencio text-center"
+      >
         <p class="etiqueta-estado mb-3">Estado actual del aula</p>
 
         <div class="icono-estado mb-3">
-          <i class="bi bi-check-circle-fill"></i>
+          <i id="icono-estado" class="bi bi-check-circle-fill"> </i>
         </div>
 
         <h2 id="estado-aula" class="valor-estado mb-2">Silencio</h2>
 
-        <p class="descripcion-estado mb-0">
+        <p id="descripcion-estado" class="descripcion-estado mb-0">
           El nivel acústico se encuentra dentro del intervalo adecuado.
         </p>
       </section>
@@ -137,6 +143,6 @@
       </footer>
     </main>
 
-    <script src="js/app.js"></script>
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>
