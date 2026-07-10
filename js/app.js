@@ -4,34 +4,69 @@ import { escucharDatosActuales, obtenerHistoricoFecha } from "./firebase.js";
 
 import { actualizarDashboard, mostrarErrorDashboard } from "./dashboard.js";
 
-import { mostrarGraficaRuido } from "./charts.js";
+import { mostrarGraficaHistorico } from "./charts.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.info("Aula Secundaria Dashboard v0.4.0 iniciado");
+  console.info("Aula Secundaria Dashboard v0.5.0 iniciado");
+
+  configurarControlesHistorico();
 
   try {
     await escucharDatosActuales(actualizarDashboard, mostrarErrorDashboard);
 
-    await cargarGraficaDelDia();
+    await cargarHistoricoSeleccionado();
   } catch (error) {
     mostrarErrorDashboard(error);
 
-    console.error("No se pudo cargar el histórico:", error);
+    console.error("No se pudo iniciar el dashboard:", error);
   }
 });
 
-async function cargarGraficaDelDia() {
-  const fechaActual = obtenerFechaActual();
+function configurarControlesHistorico() {
+  const selectorFecha = document.getElementById("selector-fecha");
 
-  const registros = await obtenerHistoricoFecha(fechaActual);
+  const selectorVariable = document.getElementById("selector-variable");
 
-  mostrarGraficaRuido(registros, fechaActual);
+  selectorFecha.value = obtenerFechaActual();
+
+  selectorFecha.addEventListener("change", cargarHistoricoSeleccionado);
+
+  selectorVariable.addEventListener("change", cargarHistoricoSeleccionado);
+}
+
+async function cargarHistoricoSeleccionado() {
+  const selectorFecha = document.getElementById("selector-fecha");
+
+  const selectorVariable = document.getElementById("selector-variable");
+
+  const mensaje = document.getElementById("mensaje-grafica");
+
+  const fecha = selectorFecha.value;
+  const variable = selectorVariable.value;
+
+  if (!fecha) {
+    mensaje.textContent = "Selecciona una fecha válida.";
+    return;
+  }
+
+  mensaje.textContent = "Cargando histórico...";
+
+  try {
+    const registros = await obtenerHistoricoFecha(fecha);
+
+    mostrarGraficaHistorico(registros, fecha, variable);
+  } catch (error) {
+    console.error("Error cargando el histórico:", error);
+
+    mensaje.textContent = "No se ha podido cargar el histórico.";
+  }
 }
 
 function obtenerFechaActual() {
   const ahora = new Date();
 
   const ano = ahora.getFullYear();
+
   const mes = String(ahora.getMonth() + 1).padStart(2, "0");
 
   const dia = String(ahora.getDate()).padStart(2, "0");

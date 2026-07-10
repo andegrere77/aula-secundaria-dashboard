@@ -268,3 +268,21 @@ body {
     height: 260px;
   }
 }
+
+.tarjeta-grafica .form-label {
+  color: var(--color-texto-secundario);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.tarjeta-grafica .form-control,
+.tarjeta-grafica .form-select {
+  border-color: var(--color-borde);
+  border-radius: 0.7rem;
+}
+
+.tarjeta-grafica .form-control:focus,
+.tarjeta-grafica .form-select:focus {
+  border-color: rgba(13, 110, 253, 0.55);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+}

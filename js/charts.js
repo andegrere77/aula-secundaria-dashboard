@@ -1,6 +1,44 @@
 "use strict";
 
-let graficaRuido = null;
+let graficaHistorico = null;
+
+const configuracionVariables = {
+  ruido: {
+    titulo: "Evolución del ruido",
+    etiqueta: "Ruido",
+    unidad: "dBA",
+    decimales: 1,
+    minimoSugerido: 30,
+    maximoSugerido: 80,
+  },
+
+  temperatura: {
+    titulo: "Evolución de la temperatura",
+    etiqueta: "Temperatura",
+    unidad: "°C",
+    decimales: 1,
+    minimoSugerido: 10,
+    maximoSugerido: 40,
+  },
+
+  humedad: {
+    titulo: "Evolución de la humedad",
+    etiqueta: "Humedad",
+    unidad: "%",
+    decimales: 1,
+    minimoSugerido: 0,
+    maximoSugerido: 100,
+  },
+
+  presion: {
+    titulo: "Evolución de la presión",
+    etiqueta: "Presión",
+    unidad: "hPa",
+    decimales: 1,
+    minimoSugerido: 950,
+    maximoSugerido: 1050,
+  },
+};
 
 function obtenerElemento(id) {
   const elemento = document.getElementById(id);
@@ -12,21 +50,20 @@ function obtenerElemento(id) {
   return elemento;
 }
 
-export function mostrarGraficaRuido(registros, fecha) {
-  const canvas = obtenerElemento("grafica-ruido");
-  const mensaje = obtenerElemento("mensaje-grafica");
-  const fechaGrafica = obtenerElemento("fecha-grafica");
+export function mostrarGraficaHistorico(registros, fecha, variable) {
+  const configuracion =
+    configuracionVariables[variable] ?? configuracionVariables.ruido;
 
-  fechaGrafica.textContent = formatearFecha(fecha);
+  const canvas = obtenerElemento("grafica-historico");
+  const mensaje = obtenerElemento("mensaje-grafica");
+  const titulo = obtenerElemento("titulo-grafica");
+
+  titulo.textContent = configuracion.titulo;
 
   if (!Array.isArray(registros) || registros.length === 0) {
-    mensaje.textContent = "No hay datos históricos para esta fecha.";
+    mensaje.textContent = "No existen registros para la fecha seleccionada.";
 
-    if (graficaRuido) {
-      graficaRuido.destroy();
-      graficaRuido = null;
-    }
-
+    destruirGrafica();
     return;
   }
 
@@ -35,18 +72,18 @@ export function mostrarGraficaRuido(registros, fecha) {
   );
 
   const etiquetas = registrosOrdenados.map(
-    (registro) => registro.hora ?? "--:--",
+    (registro) => registro.hora ?? "--:--:--",
   );
 
-  const valoresRuido = registrosOrdenados.map((registro) =>
-    Number(registro.ruido),
-  );
+  const valores = registrosOrdenados.map((registro) => {
+    const valor = Number(registro[variable]);
 
-  if (graficaRuido) {
-    graficaRuido.destroy();
-  }
+    return Number.isFinite(valor) ? valor : null;
+  });
 
-  graficaRuido = new Chart(canvas, {
+  destruirGrafica();
+
+  graficaHistorico = new Chart(canvas, {
     type: "line",
 
     data: {
@@ -54,13 +91,15 @@ export function mostrarGraficaRuido(registros, fecha) {
 
       datasets: [
         {
-          label: "Ruido (dBA)",
-          data: valoresRuido,
+          label: `${configuracion.etiqueta} ` + `(${configuracion.unidad})`,
+
+          data: valores,
           borderWidth: 2,
-          pointRadius: registros.length > 60 ? 0 : 2,
+          pointRadius: registrosOrdenados.length > 60 ? 0 : 2,
           pointHoverRadius: 5,
           tension: 0.25,
           fill: false,
+          spanGaps: true,
         },
       ],
     },
@@ -82,10 +121,15 @@ export function mostrarGraficaRuido(registros, fecha) {
         tooltip: {
           callbacks: {
             label(contexto) {
-              return `${contexto.parsed.y.toLocaleString("es-ES", {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              })} dBA`;
+              const valor = contexto.parsed.y;
+
+              return (
+                `${configuracion.etiqueta}: ` +
+                `${formatearNumero(
+                  valor,
+                  configuracion.decimales,
+                )} ${configuracion.unidad}`
+              );
             },
           },
         },
@@ -106,17 +150,34 @@ export function mostrarGraficaRuido(registros, fecha) {
         y: {
           title: {
             display: true,
-            text: "Nivel de ruido (dBA)",
+            text: `${configuracion.etiqueta} ` + `(${configuracion.unidad})`,
           },
 
-          suggestedMin: 30,
-          suggestedMax: 80,
+          suggestedMin: configuracion.minimoSugerido,
+
+          suggestedMax: configuracion.maximoSugerido,
         },
       },
     },
   });
 
-  mensaje.textContent = `${registrosOrdenados.length} registros mostrados.`;
+  mensaje.textContent =
+    `${registrosOrdenados.length} registros mostrados ` +
+    `para el ${formatearFecha(fecha)}.`;
+}
+
+function destruirGrafica() {
+  if (graficaHistorico) {
+    graficaHistorico.destroy();
+    graficaHistorico = null;
+  }
+}
+
+function formatearNumero(valor, decimales) {
+  return Number(valor).toLocaleString("es-ES", {
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
+  });
 }
 
 function formatearFecha(fecha) {
