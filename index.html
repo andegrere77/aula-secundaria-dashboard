@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Aula Secundaria</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+
+  <body>
+    <main class="container py-4 py-lg-5">
+      <header class="cabecera-dashboard mb-4">
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
+        >
+          <div>
+            <p class="texto-superior mb-1">
+              Sistema de monitorización ambiental
+            </p>
+            <h1 class="titulo-principal mb-1">Aula Secundaria</h1>
+            <p class="subtitulo mb-0">
+              Aula: <span class="fw-semibold">AULA-001</span>
+            </p>
+          </div>
+
+          <div>
+            <span class="badge estado-conexion estado-conexion-online">
+              <span class="punto-estado"></span>
+              En línea
+            </span>
+          </div>
+        </div>
+
+        <div class="ultima-actualizacion mt-4">
+          <i class="bi bi-clock me-2"></i>
+          Última actualización:
+          <span id="ultima-actualizacion">10/07/2026 18:35:22</span>
+        </div>
+      </header>
+
+      <section class="row g-3 mb-4" aria-label="Medidas ambientales">
+        <div class="col-12 col-sm-6 col-xl-3">
+          <article class="tarjeta-medida h-100">
+            <div class="icono-medida icono-temperatura">
+              <i class="bi bi-thermometer-half"></i>
+            </div>
+
+            <div>
+              <p class="etiqueta-medida mb-1">Temperatura</p>
+              <p class="valor-medida mb-0">
+                <span id="temperatura">30,9</span>
+                <span class="unidad-medida">°C</span>
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <article class="tarjeta-medida h-100">
+            <div class="icono-medida icono-humedad">
+              <i class="bi bi-droplet-half"></i>
+            </div>
+
+            <div>
+              <p class="etiqueta-medida mb-1">Humedad</p>
+              <p class="valor-medida mb-0">
+                <span id="humedad">54</span>
+                <span class="unidad-medida">%</span>
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <article class="tarjeta-medida h-100">
+            <div class="icono-medida icono-presion">
+              <i class="bi bi-speedometer2"></i>
+            </div>
+
+            <div>
+              <p class="etiqueta-medida mb-1">Presión</p>
+              <p class="valor-medida mb-0">
+                <span id="presion">1010</span>
+                <span class="unidad-medida">hPa</span>
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <article class="tarjeta-medida h-100">
+            <div class="icono-medida icono-ruido">
+              <i class="bi bi-volume-up-fill"></i>
+            </div>
+
+            <div>
+              <p class="etiqueta-medida mb-1">Nivel de ruido</p>
+              <p class="valor-medida mb-0">
+                <span id="ruido">46,3</span>
+                <span class="unidad-medida">dBA</span>
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tarjeta-estado estado-silencio text-center">
+        <p class="etiqueta-estado mb-3">Estado actual del aula</p>
+
+        <div class="icono-estado mb-3">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+
+        <h2 id="estado-aula" class="valor-estado mb-2">Silencio</h2>
+
+        <p class="descripcion-estado mb-0">
+          El nivel acústico se encuentra dentro del intervalo adecuado.
+        </p>
+      </section>
+
+      <footer class="pie-dashboard mt-4 text-center">
+        <span>Aula Secundaria</span>
+        <span class="separador-pie">·</span>
+        <span>Dashboard v0.2.0</span>
+      </footer>
+    </main>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
