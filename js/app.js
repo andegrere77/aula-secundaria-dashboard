@@ -1,14 +1,17 @@
 "use strict";
 
-import { escucharDatosActuales, obtenerHistoricoFecha } from "./firebase.js";
+import {
+  escucharDatosActuales,
+  obtenerHistoricoFecha,
+} from "./firebase.js?v=0.7.1";
 
 import {
   actualizarDashboard,
   mostrarErrorDashboard,
   iniciarSupervisionConexion,
-} from "./dashboard.js";
+} from "./dashboard.js?v=0.7.1";
 
-import { mostrarGraficaHistorico } from "./charts.js";
+import { mostrarGraficaHistorico } from "./charts.js?v=0.7.1";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.info("Aula Secundaria Dashboard v0.7.0 iniciado");
