@@ -1,5 +1,11 @@
 "use strict";
 
+let timestampUltimaActualizacion = null;
+let temporizadorConexion = null;
+
+const LIMITE_DESCONEXION_SEGUNDOS = 75;
+const INTERVALO_COMPROBACION_MS = 5000;
+
 const estadosAula = {
   0: {
     nombre: "Silencio",
@@ -28,6 +34,16 @@ const estadosAula = {
   },
 };
 
+function obtenerElemento(id) {
+  const elemento = document.getElementById(id);
+
+  if (!elemento) {
+    throw new Error(`No se encuentra el elemento #${id}`);
+  }
+
+  return elemento;
+}
+
 function formatearNumero(valor, decimales = 1) {
   const numero = Number(valor);
 
@@ -41,14 +57,17 @@ function formatearNumero(valor, decimales = 1) {
   });
 }
 
-function obtenerElemento(id) {
-  const elemento = document.getElementById(id);
+export function iniciarSupervisionConexion() {
+  actualizarEstadoConexion();
 
-  if (!elemento) {
-    throw new Error(`No se encuentra el elemento #${id}`);
+  if (temporizadorConexion !== null) {
+    clearInterval(temporizadorConexion);
   }
 
-  return elemento;
+  temporizadorConexion = setInterval(
+    actualizarEstadoConexion,
+    INTERVALO_COMPROBACION_MS,
+  );
 }
 
 export function actualizarDashboard(datos) {
@@ -63,20 +82,119 @@ export function actualizarDashboard(datos) {
 
   obtenerElemento("ruido").textContent = formatearNumero(datos.ruido, 1);
 
-  obtenerElemento("ultima-actualizacion").textContent =
-    `${datos.fecha ?? "----/--/--"} ${datos.hora ?? "--:--:--"}`;
+  const timestampRecibido = Number(datos.timestamp);
 
+  if (Number.isFinite(timestampRecibido) && timestampRecibido > 0) {
+    timestampUltimaActualizacion = timestampRecibido;
+  }
+
+  actualizarFechaMostrada(datos);
   actualizarEstado(datos.estado);
-  actualizarConexion(true);
+  actualizarEstadoConexion();
 }
 
 export function mostrarErrorDashboard(error) {
   console.error("Error del dashboard:", error);
 
-  actualizarConexion(false);
+  cambiarIndicadorConexion(false);
 
   obtenerElemento("ultima-actualizacion").textContent =
     "No se han podido obtener los datos";
+}
+
+function actualizarFechaMostrada(datos) {
+  const textoFecha =
+    `${datos.fecha ?? "----/--/--"} ` + `${datos.hora ?? "--:--:--"}`;
+
+  const tiempoRelativo = obtenerTiempoRelativo();
+
+  obtenerElemento("ultima-actualizacion").textContent = tiempoRelativo
+    ? `${textoFecha} · ${tiempoRelativo}`
+    : textoFecha;
+}
+
+function actualizarEstadoConexion() {
+  if (timestampUltimaActualizacion === null) {
+    cambiarIndicadorConexion(false);
+    return;
+  }
+
+  const ahora = Math.floor(Date.now() / 1000);
+
+  const segundosTranscurridos = Math.max(
+    0,
+    ahora - timestampUltimaActualizacion,
+  );
+
+  const conectado = segundosTranscurridos <= LIMITE_DESCONEXION_SEGUNDOS;
+
+  cambiarIndicadorConexion(conectado);
+  actualizarTextoTiempoRelativo();
+}
+
+function actualizarTextoTiempoRelativo() {
+  const elemento = obtenerElemento("ultima-actualizacion");
+
+  const textoSinTiempo = elemento.textContent.split(" · ")[0];
+
+  const tiempoRelativo = obtenerTiempoRelativo();
+
+  elemento.textContent = tiempoRelativo
+    ? `${textoSinTiempo} · ${tiempoRelativo}`
+    : textoSinTiempo;
+}
+
+function obtenerTiempoRelativo() {
+  if (timestampUltimaActualizacion === null) {
+    return "";
+  }
+
+  const ahora = Math.floor(Date.now() / 1000);
+
+  const segundos = Math.max(0, ahora - timestampUltimaActualizacion);
+
+  if (segundos < 10) {
+    return "actualizado ahora";
+  }
+
+  if (segundos < 60) {
+    return `hace ${segundos} segundos`;
+  }
+
+  const minutos = Math.floor(segundos / 60);
+
+  if (minutos === 1) {
+    return "hace 1 minuto";
+  }
+
+  if (minutos < 60) {
+    return `hace ${minutos} minutos`;
+  }
+
+  const horas = Math.floor(minutos / 60);
+
+  if (horas === 1) {
+    return "hace 1 hora";
+  }
+
+  return `hace ${horas} horas`;
+}
+
+function cambiarIndicadorConexion(conectado) {
+  const indicador = obtenerElemento("estado-conexion");
+  const textoConexion = obtenerElemento("texto-conexion");
+
+  indicador.classList.remove(
+    "estado-conexion-online",
+    "estado-conexion-warning",
+    "estado-conexion-offline",
+  );
+
+  indicador.classList.add(
+    conectado ? "estado-conexion-online" : "estado-conexion-offline",
+  );
+
+  textoConexion.textContent = conectado ? "Conectado" : "Sin conexión";
 }
 
 function actualizarEstado(codigoEstado) {
@@ -97,18 +215,6 @@ function actualizarEstado(codigoEstado) {
   tarjeta.classList.add(configuracion.clase);
 
   icono.className = `bi ${configuracion.icono}`;
-
   texto.textContent = configuracion.nombre;
   descripcion.textContent = configuracion.descripcion;
-}
-
-function actualizarConexion(conectado) {
-  const indicador = obtenerElemento("estado-conexion");
-  const texto = obtenerElemento("texto-conexion");
-
-  indicador.classList.toggle("estado-conexion-online", conectado);
-
-  indicador.classList.toggle("estado-conexion-offline", !conectado);
-
-  texto.textContent = conectado ? "En línea" : "Sin conexión";
 }

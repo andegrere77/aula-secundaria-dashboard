@@ -2,14 +2,19 @@
 
 import { escucharDatosActuales, obtenerHistoricoFecha } from "./firebase.js";
 
-import { actualizarDashboard, mostrarErrorDashboard } from "./dashboard.js";
+import {
+  actualizarDashboard,
+  mostrarErrorDashboard,
+  iniciarSupervisionConexion,
+} from "./dashboard.js";
 
 import { mostrarGraficaHistorico } from "./charts.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.info("Aula Secundaria Dashboard v0.5.0 iniciado");
+  console.info("Aula Secundaria Dashboard v0.7.0 iniciado");
 
   configurarControlesHistorico();
+  iniciarSupervisionConexion();
 
   try {
     await escucharDatosActuales(actualizarDashboard, mostrarErrorDashboard);
