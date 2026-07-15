@@ -82,6 +82,9 @@ export function actualizarDashboard(datos) {
 
   obtenerElemento("ruido").textContent = formatearNumero(datos.ruido, 1);
 
+  obtenerElemento("version-firmware").textContent =
+    datos.versionFirmware ?? "--";
+
   const timestampRecibido = Number(datos.timestamp);
 
   if (Number.isFinite(timestampRecibido) && timestampRecibido > 0) {
