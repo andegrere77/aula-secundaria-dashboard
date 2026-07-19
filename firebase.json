@@ -40,7 +40,20 @@
         ]
       },
       {
-        "source": "/firmware/**",
+        "source": "/firmware/version.txt",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate, no-transform"
+          },
+          {
+            "key": "Content-Type",
+            "value": "text/plain; charset=utf-8"
+          }
+        ]
+      },
+      {
+        "source": "/firmware/firmware.bin",
         "headers": [
           {
             "key": "Cache-Control",

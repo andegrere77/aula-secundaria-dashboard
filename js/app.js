@@ -1,20 +1,21 @@
 "use strict";
 
-import {
-  escucharDatosActuales,
-  obtenerHistoricoFecha,
-} from "./firebase.js?v=0.8.2";
+import { escucharDatosActuales, obtenerHistoricoFecha } from "./firebase.js";
 
 import {
   actualizarDashboard,
   mostrarErrorDashboard,
   iniciarSupervisionConexion,
-} from "./dashboard.js?v=0.8.2";
+} from "./dashboard.js";
 
-import { mostrarGraficaHistorico } from "./charts.js?v=0.8.2";
+import { mostrarGraficaHistorico } from "./charts.js";
+
+import { VERSION_DASHBOARD } from "./version.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.info("Aula Secundaria Dashboard v0.8.2 iniciado");
+  console.info(`Aula Secundaria Dashboard v${VERSION_DASHBOARD} iniciado`);
+
+  document.getElementById("version-dashboard").textContent = VERSION_DASHBOARD;
 
   configurarControlesHistorico();
   iniciarSupervisionConexion();
