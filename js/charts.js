@@ -29,15 +29,6 @@ const configuracionVariables = {
     minimoSugerido: 0,
     maximoSugerido: 100,
   },
-
-  presion: {
-    titulo: "Evolución de la presión",
-    etiqueta: "Presión",
-    unidad: "hPa",
-    decimales: 1,
-    minimoSugerido: 950,
-    maximoSugerido: 1050,
-  },
 };
 
 function obtenerElemento(id) {
@@ -52,7 +43,7 @@ function obtenerElemento(id) {
 
 export function mostrarGraficaHistorico(registros, fecha, variable) {
   const configuracion =
-    configuracionVariables[variable] ?? configuracionVariables.ruido;
+    configuracionVariables[variable] ?? configuracionVariables.temperatura;
 
   const canvas = obtenerElemento("grafica-historico");
   const mensaje = obtenerElemento("mensaje-grafica");

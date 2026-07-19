@@ -3,18 +3,18 @@
 import {
   escucharDatosActuales,
   obtenerHistoricoFecha,
-} from "./firebase.js?v=0.8.1";
+} from "./firebase.js?v=0.8.2";
 
 import {
   actualizarDashboard,
   mostrarErrorDashboard,
   iniciarSupervisionConexion,
-} from "./dashboard.js?v=0.8.1";
+} from "./dashboard.js?v=0.8.2";
 
-import { mostrarGraficaHistorico } from "./charts.js?v=0.8.1";
+import { mostrarGraficaHistorico } from "./charts.js?v=0.8.2";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.info("Aula Secundaria Dashboard v0.8.0 iniciado");
+  console.info("Aula Secundaria Dashboard v0.8.2 iniciado");
 
   configurarControlesHistorico();
   iniciarSupervisionConexion();

@@ -78,8 +78,6 @@ export function actualizarDashboard(datos) {
 
   obtenerElemento("humedad").textContent = formatearNumero(datos.humedad, 1);
 
-  obtenerElemento("presion").textContent = formatearNumero(datos.presion, 0);
-
   obtenerElemento("ruido").textContent = formatearNumero(datos.ruido, 1);
 
   obtenerElemento("version-firmware").textContent =
